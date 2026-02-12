@@ -1,0 +1,122 @@
+#include <PID_v1.h>
+
+// Define sensor pins
+const int leftSensor = A0;
+const int rightSensor = A1;#include <PID_v1.h>
+
+// Define sensor pins
+const int leftSensor = A0;
+const int rightSensor = A1;
+
+// Define motor control pins
+const int leftMotor = 9;
+const int rightMotor = 10;
+
+// PID parameters
+double Kp = 2.0, Ki = 5.0, Kd = 1.0;
+double input, output, setpoint;
+
+// Initialize PID controller
+PID myPID(&input, &output, &setpoint, Kp, Ki, Kd, DIRECT);
+
+void setup() {
+pinMode(leftSensor, INPUT);
+pinMode(rightSensor, INPUT);
+pinMode(leftMotor, OUTPUT);
+pinMode(rightMotor, OUTPUT);
+
+// Setpoint is zero when the robot is perfectly on the line
+setpoint = 0;
+
+// Initialize PID
+myPID.SetMode(AUTOMATIC);
+
+void loop() {
+int leftValue = analogRead(leftSensor);
+int rightValue = analogRead(rightsensor);
+
+// Calculate error
+input = leftValue - rightValue;
+// Compute PID output
+myPID.Compute();
+
+// Adjust motor speeds
+analogWrite(leftMotor, constrain(150 - output, 0, 255));
+analogWrite(rightMotor, constrain(150 + output, 0, 255));
+}#include <PID_v1.h>
+
+// Define sensor pins
+const int leftSensor = A0;
+const int rightSensor = A1;
+
+// Define motor control pins
+const int leftMotor = 9;
+const int rightMotor = 10;
+
+// PID parameters
+double Kp = 2.0, Ki = 5.0, Kd = 1.0;
+double input, output, setpoint;
+
+// Initialize PID controller
+PID myPID(&input, &output, &setpoint, Kp, Ki, Kd, DIRECT);
+
+void setup() {
+pinMode(leftSensor, INPUT);
+pinMode(rightSensor, INPUT);
+pinMode(leftMotor, OUTPUT);
+pinMode(rightMotor, OUTPUT);
+
+// Setpoint is zero when the robot is perfectly on the line
+setpoint = 0;
+
+// Initialize PID
+myPID.SetMode(AUTOMATIC);
+
+void loop() {
+int leftValue = analogRead(leftSensor);
+int rightValue = analogRead(rightSensor);// Calculate error
+input = leftValue - rightValue;
+
+// Compute PID output
+myPID.Compute();
+
+// Adjust motor speeds
+analogWrite(leftMotor, constrain(150 - output, 0, 255));
+analogWrite(rightMotor, constrain(150 + output, 0, 255));
+
+// Define motor control pins
+const int leftMotor = 9;
+const int rightMotor = 10;
+
+// PID parameters
+double Kp = 2.0, Ki = 5.0, Kd = 1.0;
+double input, output, setpoint;
+
+// Initialize PID controller
+PID myPID(&input, &output, &setpoint, Kp, Ki, Kd, DIRECT);
+
+void setup() {
+pinMode(leftSensor, INPUT);
+pinMode(rightSensor, INPUT);
+pinMode(leftMotor, OUTPUT);
+pinMode(rightMotor, OUTPUT);
+
+// Setpoint is zero when the robot is perfectly on the line
+setpoint = 0;
+
+// Initialize PID
+myPID.SetMode(AUTOMATIC);
+
+void loop() {
+int leftValue = analogRead(leftSensor);
+int rightValue = analogRead(rightSensor);
+
+// Calculate error
+input = leftValue - rightValue;
+
+// Compute PID output
+myPID.Compute();
+
+// Adjust motor speeds
+analogWrite(leftMotor, constrain(150 - output, 0, 255));
+analogWrite(rightMotor, constrain(150 + output, 0, 255));

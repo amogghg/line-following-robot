@@ -1,0 +1,94 @@
+// ===== L298N Motor Pins =====
+int IN1 = 8;
+int IN2 = 9;
+int IN3 = 10;
+int IN4 = 11;
+
+// Enable pins (PWM)
+int ENA = 5;
+int ENB = 6;
+
+// IR Sensors
+int IR_Left = A0;
+int IR_Right = A1;
+
+// Speed
+int baseSpeed = 150;
+int turnSpeed = 120;
+
+void setup() {
+  pinMode(IN1, OUTPUT);
+  pinMode(IN2, OUTPUT);
+  pinMode(IN3, OUTPUT);
+  pinMode(IN4, OUTPUT);
+
+  pinMode(ENA, OUTPUT);
+  pinMode(ENB, OUTPUT);
+
+  pinMode(IR_Left, INPUT);
+  pinMode(IR_Right, INPUT);
+
+  analogWrite(ENA, baseSpeed);
+  analogWrite(ENB, baseSpeed);
+}
+
+void loop() {
+  int left = digitalRead(IR_Left);
+  int right = digitalRead(IR_Right);
+
+  // ON LINE → GO STRAIGHT
+  if (left == LOW && right == LOW) {
+    forward();
+  }
+  // LINE ON LEFT → TURN LEFT
+  else if (left == LOW && right == HIGH) {
+    leftTurn();
+  }
+  // LINE ON RIGHT → TURN RIGHT
+  else if (left == HIGH && right == LOW) {
+    rightTurn();
+  }
+  // LINE LOST → STOP
+  else {
+    stopCar();
+  }
+}
+
+// ===== Motor Functions =====
+
+void forward() {
+  analogWrite(ENA, baseSpeed);
+  analogWrite(ENB, baseSpeed);
+
+  digitalWrite(IN1, HIGH);
+  digitalWrite(IN2, LOW);
+  digitalWrite(IN3, HIGH);
+  digitalWrite(IN4, LOW);
+}
+
+void leftTurn() {
+  analogWrite(ENA, turnSpeed);
+  analogWrite(ENB, baseSpeed);
+
+  digitalWrite(IN1, LOW);
+  digitalWrite(IN2, LOW);
+  digitalWrite(IN3, HIGH);
+  digitalWrite(IN4, LOW);
+}
+
+void rightTurn() {
+  analogWrite(ENA, baseSpeed);
+  analogWrite(ENB, turnSpeed);
+
+  digitalWrite(IN1, HIGH);
+  digitalWrite(IN2, LOW);
+  digitalWrite(IN3, LOW);
+  digitalWrite(IN4, LOW);
+}
+
+void stopCar() {
+  digitalWrite(IN1, LOW);
+  digitalWrite(IN2, LOW);
+  digitalWrite(IN3, LOW);
+  digitalWrite(IN4, LOW);
+}

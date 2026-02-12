@@ -1,0 +1,73 @@
+// L298N motor pins
+int IN1 = 8;
+int IN2 = 9;
+int IN3 = 10;
+int IN4 = 11;
+int ENA = 5;
+int ENB = 6;
+// Motor speed
+int speedMotor = 120;
+// IR sensor pins
+int IR_Left = A0;   // connect left IR sensor
+int IR_Right = A1;  // connect right IR sensor
+void setup() {
+  pinMode(IN1, OUTPUT);
+  pinMode(IN2, OUTPUT);
+  pinMode(IN3, OUTPUT);
+  pinMode(IN4, OUTPUT);
+  pinMode(ENA, OUTPUT);
+  pinMode(ENB, OUTPUT);
+  analogWrite(ENA, speedMotor);
+  analogWrite(ENB, speedMotor);
+  pinMode(IR_Left, INPUT);
+  pinMode(IR_Right, INPUT);
+  Serial.begin(9600); // Start Serial Monitor
+}
+void loop() {
+  int leftVal = analogRead(IR_Left);   // read left sensor
+  int rightVal = analogRead(IR_Right); // read right sensor
+  // Print sensor values to Serial Monitor
+  Serial.print("Left Sensor: ");
+  Serial.print(leftVal);
+  Serial.print("  |  Right Sensor: ");
+  Serial.println(rightVal);
+  // Assuming black line gives HIGH (>=500) and white gives LOW (<500)
+  if (leftVal < 500 && rightVal < 500) {       // both on white
+    forward();
+  } 
+  else if (leftVal < 500 && rightVal >= 500) { // left white, right black
+    leftTurn();
+  } 
+  else if (leftVal >= 500 && rightVal < 500) { // left black, right white
+    rightTurn();
+  } 
+  else {                                        // both black
+    stopRobot();
+  }
+  delay(200); // small delay for readability
+}
+// Motor functions
+void forward() {
+  digitalWrite(IN1, LOW);
+  digitalWrite(IN2, HIGH);
+  digitalWrite(IN3, HIGH);
+  digitalWrite(IN4, LOW);
+}
+void leftTurn() {
+  digitalWrite(IN1, LOW);
+  digitalWrite(IN2, LOW);
+  digitalWrite(IN3, HIGH);
+  digitalWrite(IN4, LOW);
+}
+void rightTurn() {
+  digitalWrite(IN1, LOW);
+  digitalWrite(IN2, HIGH);
+  digitalWrite(IN3, LOW);
+  digitalWrite(IN4, LOW);
+}
+void stopRobot() {
+  digitalWrite(IN1, LOW);
+  digitalWrite(IN2, LOW);
+  digitalWrite(IN3, LOW);
+  digitalWrite(IN4, LOW);
+}
