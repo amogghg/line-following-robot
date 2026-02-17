@@ -1,0 +1,89 @@
+// Pin definitions
+#define LEFT A0    // Left line sensor
+#define RIGHT A1   // Right line sensor
+
+#define IN1 8      // Right motor input 1
+#define IN2 9      // Right motor input 2
+#define IN3 10     // Left motor input 1
+#define IN4 11     // Left motor input 2
+
+#define ENA 5      // Right motor speed control (PWM)
+#define ENB 6      // Left motor speed control (PWM)
+
+// Speed settings
+int baseSpeed = 65;   // Normal forward speed (higher = faster)
+int slowSpeed = 30;   // Slower speed for adjustments (smoother turning)
+
+void setup() {
+  // Initialize sensor pins as input
+  pinMode(LEFT, INPUT);
+  pinMode(RIGHT, INPUT);
+  
+  // Initialize motor pins as output
+  pinMode(IN1, OUTPUT);
+  pinMode(IN2, OUTPUT);
+  pinMode(IN3, OUTPUT);
+  pinMode(IN4, OUTPUT);
+  pinMode(ENA, OUTPUT);
+  pinMode(ENB, OUTPUT);
+}
+
+void loop() {
+  // Read sensor values
+  int L = digitalRead(LEFT);   // 1 = WHITE, 0 = BLACK
+  int R = digitalRead(RIGHT);  // 1 = WHITE, 0 = BLACK
+
+  // Decision making based on sensor input
+  if (L == 1 && R == 1) {
+    // Both sensors on white → move forward
+    forward();
+  }
+  else if (L == 0 && R == 1) {
+    // Left sensor on black, right sensor on white → adjust right
+    adjustRight();
+  }
+  else if (L == 1 && R == 0) {
+    // Right sensor on black, left sensor on white → adjust left
+    adjustLeft();
+  }
+  else {  
+    // Both sensors on black → keep moving forward
+    // This prevents robot from stopping at track ends or intersections
+    forward();
+  }
+}
+
+// Function: Move forward
+void forward() {
+  analogWrite(ENA, baseSpeed); // Right motor speed
+  analogWrite(ENB, baseSpeed); // Left motor speed
+
+  digitalWrite(IN1, LOW);  // Right motor forward
+  digitalWrite(IN2, HIGH);
+  digitalWrite(IN3, HIGH); // Left motor forward
+  digitalWrite(IN4, LOW);
+}
+
+// Function: Adjust slightly left
+// Slows down right motor to turn left gently
+void adjustLeft() {
+  analogWrite(ENA, slowSpeed); // Right motor slower
+  analogWrite(ENB, baseSpeed); // Left motor normal speed
+
+  digitalWrite(IN1, LOW);  // Right motor forward
+  digitalWrite(IN2, HIGH);
+  digitalWrite(IN3, HIGH); // Left motor forward
+  digitalWrite(IN4, LOW);
+}
+
+// Function: Adjust slightly right
+// Slows down left motor to turn right gently
+void adjustRight() {
+  analogWrite(ENA, baseSpeed); // Right motor normal speed
+  analogWrite(ENB, slowSpeed); // Left motor slower
+
+  digitalWrite(IN1, LOW);  // Right motor forward
+  digitalWrite(IN2, HIGH);
+  digitalWrite(IN3, HIGH); // Left motor forward
+  digitalWrite(IN4, LOW);
+}
